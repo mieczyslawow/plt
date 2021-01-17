@@ -1,5 +1,6 @@
 package pl.zubardzka.plt.domain;
 
+import java.util.List;
 import javax.persistence.*;
 
 @Entity
@@ -13,6 +14,9 @@ public class Forum {
 	private String name;
 
 	private String link;
+
+	@OneToMany(mappedBy = "forum")
+	private List<Post> posts;
 
 	public Forum() {
 	}
