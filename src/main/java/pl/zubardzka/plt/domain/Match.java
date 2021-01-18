@@ -27,4 +27,60 @@ public class Match {
 	@ManyToOne
 	@JoinColumn(name = "post_id")
 	private Post post;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(final Integer id) {
+		this.id = id;
+	}
+
+	public Team getHomeTeam() {
+		return homeTeam;
+	}
+
+	public void setHomeTeam(final Team homeTeam) {
+		this.homeTeam = homeTeam;
+	}
+
+	public Team getAwayTeam() {
+		return awayTeam;
+	}
+
+	public void setAwayTeam(final Team awayTeam) {
+		this.awayTeam = awayTeam;
+	}
+
+	public int getHomeScore() {
+		return homeScore;
+	}
+
+	public void setHomeScore(final int homeScore) {
+		this.homeScore = homeScore;
+	}
+
+	public int getAwayScore() {
+		return awayScore;
+	}
+
+	public void setAwayScore(final int awayScore) {
+		this.awayScore = awayScore;
+	}
+
+	public boolean isHit() {
+		return hit;
+	}
+
+	public void setHit(final boolean hit) {
+		this.hit = hit;
+	}
+
+	public Post getPost() {
+		return post;
+	}
+
+	public void setPost(final Post post) {
+		this.post = post;
+	}
 }

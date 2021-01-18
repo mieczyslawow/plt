@@ -21,4 +21,35 @@ public class Post {
 	@JoinColumn(name = "id")
 	private List<Match> matches;
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(final Integer id) {
+		this.id = id;
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(final Player player) {
+		this.player = player;
+	}
+
+	public Forum getForum() {
+		return forum;
+	}
+
+	public void setForum(final Forum forum) {
+		this.forum = forum;
+	}
+
+	public List<Match> getMatches() {
+		return matches;
+	}
+
+	public void setMatches(final List<Match> matches) {
+		this.matches = matches;
+	}
 }
