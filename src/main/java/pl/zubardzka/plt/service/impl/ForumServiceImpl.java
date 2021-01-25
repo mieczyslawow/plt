@@ -1,15 +1,15 @@
-package pl.zubardzka.plt.service;
+package pl.zubardzka.plt.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import pl.zubardzka.plt.domain.Forum;
 import pl.zubardzka.plt.repository.ForumRepository;
+import pl.zubardzka.plt.service.ForumService;
 
 @Service
-public class ForumServiceImpl implements ForumService{
+public class ForumServiceImpl implements ForumService {
 
 	private final ForumRepository forumRepository;
 
@@ -36,6 +36,11 @@ public class ForumServiceImpl implements ForumService{
 
 	@Override
 	public boolean existInDB(final Forum forum) {
-		return forumRepository.existsCarExactCustomQuery(forum.getLink(), forum.getName());
+		return forumRepository.existsForumExactCustomQuery(forum.getLink(), forum.getName());
+	}
+
+	@Override
+	public Forum getById(final Integer id) {
+		return forumRepository.getById(id);
 	}
 }

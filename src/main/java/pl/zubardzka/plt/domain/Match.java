@@ -15,7 +15,7 @@ public class Match {
 	private Team homeTeam;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "home_team", referencedColumnName = "id")
+	@JoinColumn(name = "away_team", referencedColumnName = "id")
 	private Team awayTeam;
 
 	private int homeScore;

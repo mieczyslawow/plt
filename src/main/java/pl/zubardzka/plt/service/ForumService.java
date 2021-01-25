@@ -14,4 +14,6 @@ public interface ForumService {
 
 	boolean existInDB(Forum forum);
 
+	Forum getById(Integer id);
+
 }

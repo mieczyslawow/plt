@@ -5,8 +5,8 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-<p th:each="element:${elements}" >
-	<a th:text="${element.name}" th:href="${element.link}"></a>
+<p th:each="element:${elements}">
+	<a th:href="'post/' + ${element.id}" th:text="${element.name}"></a>
 </p>
 </body>
 </html>

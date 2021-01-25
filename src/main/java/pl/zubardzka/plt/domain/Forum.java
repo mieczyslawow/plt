@@ -15,7 +15,7 @@ public class Forum {
 
 	private String link;
 
-	@OneToMany(mappedBy = "forum")
+	@OneToMany(mappedBy = "forum", cascade = CascadeType.ALL)
 	private List<Post> posts;
 
 	public Forum() {

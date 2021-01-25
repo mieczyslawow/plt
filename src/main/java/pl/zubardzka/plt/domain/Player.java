@@ -7,6 +7,7 @@ import javax.persistence.*;
 public class Player {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 
 	private String name;

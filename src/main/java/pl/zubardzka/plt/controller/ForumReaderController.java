@@ -1,7 +1,8 @@
 package pl.zubardzka.plt.controller;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -22,16 +23,22 @@ public class ForumReaderController {
 		this.forumService = forumService;
 	}
 
-	@GetMapping("/posts")
-	public String getPosts(Model model) {
-		//TODO can add check if is new post use count from repository
+	@GetMapping("/forum")
+	public String getForumPosts(Model model) {
 		model.addAttribute("elements", getListFromDB());
-		return "posts";
+		return "forum";
+	}
+
+	@GetMapping("/forum/update")
+	public String updateForumPosts() {
+		getListFromPage().stream().filter(post -> !forumService.existInDB(post)).forEach(forumService::save);
+		return "forum";
 	}
 
 	private List<Forum> getListFromDB() {
 		return forumService.getAll();
 	}
+
 	private List<Forum> getListFromPage() {
 		List<Forum> posts = new ArrayList<>();
 		String url = "https://joemonster.org/phorum/list.php?f=42";
@@ -39,9 +46,9 @@ public class ForumReaderController {
 			Document doc = Jsoup.connect(url).get();
 			Elements elements = doc.getElementsByClass("phorum-post-title");
 			for (Element element : elements) {
-				if (element.html().contains("PLT")) {
+				if (element.html().contains("PLT") && !element.html().contains("finałowy")) {
 					Forum forum = new Forum(element.html(), element.attr("abs:href"));
-					posts.add(forum);
+					posts.add(0, forum);
 				}
 			}
 		} catch (IOException e){

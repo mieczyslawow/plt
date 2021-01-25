@@ -8,6 +8,7 @@ import javax.persistence.*;
 public class Post {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 
 	@OneToOne
@@ -17,7 +18,7 @@ public class Post {
 	@JoinColumn(name = "forum_id", nullable = false)
 	private Forum forum;
 
-	@OneToMany
+	@OneToMany(cascade = {CascadeType.ALL})
 	@JoinColumn(name = "id")
 	private List<Match> matches;
 

@@ -10,8 +10,10 @@ import pl.zubardzka.plt.domain.Forum;
 public interface ForumRepository extends CrudRepository<Forum, Integer> {
 
 	@Query("select case when count(f)> 0 then true else false end from Forum f where f.link = :link AND f.name = :name")
-	boolean existsCarExactCustomQuery(@Param("link") String link, @Param("name") String name);
+	boolean existsForumExactCustomQuery(@Param("link") String link, @Param("name") String name);
 
 	@Query("select count(f) from Forum f")
 	int countAllQuery();
+
+	Forum getById(Integer id);
 }
