@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Getting Started: Serving Web Content</title>
+	<meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+</head>
+<body>
+<table>
+	<tr th:each="map : ${map}">
+		<td><span th:text="${map.key.name}">keyvalue</span></td>
+		<table>
+			<th>Gospodarz</th>
+			<th>Gość</th>
+			<th colspan="2">typowany</th>
+			<th colspan="2">prawidłowy</th>
+			<th>punkty</th>
+			<tr th:each="matches : ${map.value}">
+				<td><span th:text="${matches.homeTeam.name}">Gospodarz</span></td>
+				<td><span th:text="${matches.awayTeam.name}">Gość</span></td>
+				<td><span th:text="${matches.homeScore}"> </span></td>
+				<td><span th:text="${matches.awayScore}"> </span></td>
+				<td><span th:text="${matches.matchResult.homeScore}"> </span></td>
+				<td><span th:text="${matches.matchResult.awayScore}"> </span></td>
+				<td>0</td>
+			</tr>
+		</table>
+	</tr>
+</table>
+</body>
+</html>

@@ -3,8 +3,8 @@ package pl.zubardzka.plt.domain;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "matches")
-public class Match {
+@Table(name = "matches_result")
+public class MatchResult {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,14 +25,6 @@ public class Match {
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "forum_id", referencedColumnName = "id")
 	private Forum forum;
-
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "player_id", referencedColumnName = "id")
-	private Player player;
-
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "matches_result_id", referencedColumnName = "id")
-	private MatchResult matchResult;
 
 	private boolean hit;
 
@@ -86,25 +78,5 @@ public class Match {
 
 	public Forum getForum() {
 		return forum;
-	}
-
-	public void setForum(final Forum forum) {
-		this.forum = forum;
-	}
-
-	public Player getPlayer() {
-		return player;
-	}
-
-	public void setPlayer(final Player player) {
-		this.player = player;
-	}
-
-	public MatchResult getMatchResult() {
-		return matchResult;
-	}
-
-	public void setMatchResult(final MatchResult matchResult) {
-		this.matchResult = matchResult;
 	}
 }

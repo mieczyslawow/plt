@@ -1,13 +1,8 @@
 package pl.zubardzka.plt.controller;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -18,24 +13,18 @@ import pl.zubardzka.plt.domain.*;
 import pl.zubardzka.plt.service.*;
 
 @Controller
-public class PostReaderController {
+public class MatchesReaderController {
 
-	private final PostService postService;
 	private final ForumService forumService;
-	private final PlayerService playerService;
 	private final TeamService teamService;
 	private final MatchService matchService;
 
-	Logger logger = LoggerFactory.getLogger(PostReaderController.class);
+	Logger logger = LoggerFactory.getLogger(MatchesReaderController.class);
 
-	public PostReaderController(final PostService postService,
-								final ForumService forumService,
-								final PlayerService playerService,
-								final TeamService teamService,
-								final MatchService matchService) {
-		this.postService = postService;
+	public MatchesReaderController(final ForumService forumService,
+								   final TeamService teamService,
+								   final MatchService matchService) {
 		this.forumService = forumService;
-		this.playerService = playerService;
 		this.teamService = teamService;
 		this.matchService = matchService;
 	}
@@ -44,41 +33,37 @@ public class PostReaderController {
 		return line.contains(" - ") && line.matches(".*\\d.*\\d");
 	}
 
-	@GetMapping("/post/{id}")
+	@GetMapping("/forum/{id}")
 	public String getPostDetails(Model model, @PathVariable final Integer id) {
-
 		Forum forum = forumService.getById(id);
+		List<Match> matches = matchService.getAll(forum);
+		Map<Player, List<Match>> map = matches.stream().collect(Collectors.groupingBy(Match::getPlayer));
+		model.addAttribute("map", map);
 		String url = forum.getLink();
-
-		try {
-			Document doc = Jsoup.connect(url).get();
-			Elements elements = doc.getElementsByClass("postBox");
-			for (Element element : elements) {
-				Post post = new Post();
-				post.setForum(forum);
-				String author = element.attributes().get("data-author_username");
-				Player player = playerService.getByName(author);
-				if (player == null) {
-					player = playerService.save(author);
-				}
-				post.setPlayer(player);
-				Elements postElement = element.getElementsByClass("postBody");
-				if (postElement != null) {
-					String body = prepareBody(postElement.get(0).html());
-					List<Match> matches = prepareMatches(body, post);
-					post.setMatches(matches);
-				}
-				postService.save(post);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return "forum";
+//		try {
+//			Document doc = Jsoup.connect(url).get();
+//			Elements elements = doc.getElementsByClass("postBox");
+//			for (Element element : elements) {
+//				String author = element.attributes().get("data-author_username");
+//				Player player = playerService.getByName(author);
+//				if (player == null) {
+//					player = playerService.save(author);
+//				}
+//				Elements postElement = element.getElementsByClass("postBody");
+//				if (postElement != null) {
+//					String body = prepareBody(postElement.get(0).html());
+//					prepareMatches(body, forum, player);
+//				}
+//			}
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+		return "post";
 	}
 
 	private String prepareBody(final String body) {
 		String br = "<br>";
-		String hit = "HIT";
+		String hit = " HIT";
 		String blank = "";
 		String result = body.replace(br, blank);
 		result = result.replaceAll("\\(?\\d{2}:\\d{2}\\)", blank);
@@ -89,11 +74,11 @@ public class PostReaderController {
 		return result;
 	}
 
-	private List<Match> prepareMatches(final String body, final Post post) {
+	private List<Match> prepareMatches(final String body, final Forum forum, final Player player) {
 		String[] lineList = body.split("\n");
 		List<String> stringMatches = Arrays.stream(lineList)
 										   .map(String::trim)
-										   .filter(PostReaderController::isProperMatch)
+										   .filter(MatchesReaderController::isProperMatch)
 										   .collect(Collectors.toList());
 		List<Match> matches = new ArrayList<>();
 		for (String s : stringMatches) {
@@ -104,6 +89,9 @@ public class PostReaderController {
 			Team homeTeam = teamService.getByName(s.substring(0, s.indexOf(" - ")));
 			Team awayTeam = teamService.getByName(s.substring(s.indexOf(" - ") + 3, s.lastIndexOf(" ")));
 			s = s.replaceAll("[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ -]* ", "");
+			if (s.length() > 3) {
+				s = s.replace(":", "");
+			}
 			int homeScore = Integer.parseInt(s.substring(0, 1));
 			int awayScore = Integer.parseInt(s.substring(2, 3));
 			Match m = new Match();
@@ -111,7 +99,8 @@ public class PostReaderController {
 			m.setAwayScore(awayScore);
 			m.setHomeTeam(homeTeam);
 			m.setAwayTeam(awayTeam);
-			m.setPost(post);
+			m.setForum(forum);
+			m.setPlayer(player);
 			matchService.save(m);
 			matches.add(m);
 		}

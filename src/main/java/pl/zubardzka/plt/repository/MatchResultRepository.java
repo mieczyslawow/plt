@@ -5,10 +5,10 @@ import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import pl.zubardzka.plt.domain.Forum;
-import pl.zubardzka.plt.domain.Match;
+import pl.zubardzka.plt.domain.MatchResult;
 
 @Repository
-public interface MatchRepository extends CrudRepository<Match, Integer> {
+public interface MatchResultRepository extends CrudRepository<MatchResult, Integer> {
 
-	List<Match> getAllByForum(Forum forum);
+	List<MatchResult> getAllByForumOrderById(Forum forum);
 }

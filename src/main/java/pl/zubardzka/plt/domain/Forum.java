@@ -15,8 +15,8 @@ public class Forum {
 
 	private String link;
 
-	@OneToMany(mappedBy = "forum", cascade = CascadeType.ALL)
-	private List<Post> posts;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	private List<Match> matches;
 
 	public Forum() {
 	}
@@ -49,6 +49,14 @@ public class Forum {
 
 	public void setLink(final String link) {
 		this.link = link;
+	}
+
+	public List<Match> getMatches() {
+		return matches;
+	}
+
+	public void setMatches(final List<Match> matches) {
+		this.matches = matches;
 	}
 
 	@Override
