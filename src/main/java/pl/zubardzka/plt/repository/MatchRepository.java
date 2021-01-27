@@ -11,4 +11,6 @@ import pl.zubardzka.plt.domain.Match;
 public interface MatchRepository extends CrudRepository<Match, Integer> {
 
 	List<Match> getAllByForum(Forum forum);
+
+	Match getById(Integer id);
 }

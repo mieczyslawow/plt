@@ -26,4 +26,9 @@ public class MatchServiceImpl implements MatchService {
 	public List<Match> getAll(final Forum forum) {
 		return matchRepository.getAllByForum(forum);
 	}
+
+	@Override
+	public Match getById(final Integer id) {
+		return matchRepository.getById(id);
+	}
 }

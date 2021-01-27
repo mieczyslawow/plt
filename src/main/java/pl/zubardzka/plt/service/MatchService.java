@@ -10,4 +10,6 @@ public interface MatchService {
 	Match save(final Match m);
 
 	List<Match> getAll(final Forum forum);
+
+	Match getById(Integer id);
 }

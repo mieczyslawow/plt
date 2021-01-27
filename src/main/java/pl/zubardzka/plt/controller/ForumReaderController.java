@@ -46,7 +46,8 @@ public class ForumReaderController {
 			Document doc = Jsoup.connect(url).get();
 			Elements elements = doc.getElementsByClass("phorum-post-title");
 			for (Element element : elements) {
-				if (element.html().contains("PLT") && !element.html().contains("finałowy")) {
+				if ((element.html().contains("PLT") || (element.html().contains("Polska"))) && !element.html()
+																									   .contains("finałowy")) {
 					Forum forum = new Forum(element.html(), element.attr("abs:href"));
 					posts.add(0, forum);
 				}

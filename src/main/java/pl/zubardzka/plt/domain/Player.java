@@ -14,8 +14,6 @@ public class Player {
 	@Column(name = "nick_name")
 	private String name;
 
-	private int score;
-
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	private List<Match> matches;
 
@@ -33,14 +31,6 @@ public class Player {
 
 	public void setName(final String name) {
 		this.name = name;
-	}
-
-	public int getScore() {
-		return score;
-	}
-
-	public void setScore(final int score) {
-		this.score = score;
 	}
 
 	public List<Match> getMatches() {

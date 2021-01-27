@@ -34,7 +34,7 @@ public class Match {
 	@JoinColumn(name = "matches_result_id", referencedColumnName = "id")
 	private MatchResult matchResult;
 
-	private boolean hit;
+	private Integer score;
 
 	public Integer getId() {
 		return id;
@@ -76,14 +76,6 @@ public class Match {
 		this.awayScore = awayScore;
 	}
 
-	public boolean isHit() {
-		return hit;
-	}
-
-	public void setHit(final boolean hit) {
-		this.hit = hit;
-	}
-
 	public Forum getForum() {
 		return forum;
 	}
@@ -106,5 +98,13 @@ public class Match {
 
 	public void setMatchResult(final MatchResult matchResult) {
 		this.matchResult = matchResult;
+	}
+
+	public Integer getScore() {
+		return score;
+	}
+
+	public void setScore(final Integer score) {
+		this.score = score;
 	}
 }
