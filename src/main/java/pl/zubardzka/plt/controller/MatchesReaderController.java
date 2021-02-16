@@ -44,30 +44,38 @@ public class MatchesReaderController {
 	@GetMapping("/forum/{id}")
 	public String getPostDetails(Model model, @PathVariable final Integer id) {
 		Forum forum = forumService.getById(id);
-		List<Match> matches = matchService.getAll(forum);
-		Map<Player, List<Match>> map = matches.stream().collect(Collectors.groupingBy(Match::getPlayer));
-		model.addAttribute("map", map);
-		String url = forum.getLink();
-		try {
-			Document doc = Jsoup.connect(url).get();
-			Elements elements = doc.getElementsByClass("postBox");
-			for (Element element : elements) {
-				String author = element.attributes().get("data-author_username");
-				Player player = playerService.getByName(author);
-				if (player == null) {
-					player = playerService.save(author);
-				}
-				Elements postElement = element.getElementsByClass("postBody");
-				if (postElement != null) {
-					String body = prepareBody(postElement.get(0).html());
-					if (isExtraBet(body)) {
-						logger.info(player.getName() + " " + extraBetResult(body));
+		if (forum.isRead()) {
+			List<Match> matches = matchService.getAll(forum);
+			Map<Player, List<Match>> map = matches.stream().collect(Collectors.groupingBy(Match::getPlayer));
+			model.addAttribute("map", map);
+		} else {
+			List<Match> matches = matchService.getAll(forum);
+			Map<Player, List<Match>> map = matches.stream().collect(Collectors.groupingBy(Match::getPlayer));
+			model.addAttribute("map", map);
+			String url = forum.getLink();
+			try {
+				Document doc = Jsoup.connect(url).get();
+				Elements elements = doc.getElementsByClass("postBox");
+				for (Element element : elements) {
+					String author = element.attributes().get("data-author_username");
+					Player player = playerService.getByName(author);
+					if (player == null) {
+						player = playerService.save(author);
 					}
-					prepareMatches(body, forum, player);
+					Elements postElement = element.getElementsByClass("postBody");
+					if (postElement != null) {
+						String body = prepareBody(postElement.get(0).html());
+						if (isExtraBet(body)) {
+							logger.info(player.getName() + " " + extraBetResult(body));
+						}
+						prepareMatches(body, forum, player);
+					}
 				}
+				forum.setRead(true);
+				forumService.save(forum);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 		return "post";
 	}
@@ -77,6 +85,7 @@ public class MatchesReaderController {
 		Forum forum = forumService.getById(id);
 		List<Match> matches = matchService.getAll(forum);
 		for (Match match : matches) {
+			logger.info(match.getHomeTeam() + " - " + match.getAwayTeam() + " : " + match.getId());
 			if (match.getHomeScore() == match.getMatchResult().getHomeScore()
 				&& match.getAwayScore() == match.getMatchResult().getAwayScore()) {
 				match.setScore(2);

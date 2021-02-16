@@ -15,6 +15,8 @@ public class Forum {
 
 	private String link;
 
+	private boolean read;
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	private List<Match> matches;
 
@@ -53,6 +55,14 @@ public class Forum {
 
 	public List<Match> getMatches() {
 		return matches;
+	}
+
+	public boolean isRead() {
+		return read;
+	}
+
+	public void setRead(final boolean read) {
+		this.read = read;
 	}
 
 	public void setMatches(final List<Match> matches) {
